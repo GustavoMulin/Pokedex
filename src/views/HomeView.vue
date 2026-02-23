@@ -11,6 +11,13 @@
               <transition>
                 <img src="@/assets/imgs/pokemons/001.png" v-if="exibir" />
               </transition>
+
+              <div class="evolucoes">
+                <transition> <img src="@/assets/imgs/pokemons/002.png" v-if="exibir" /> </transition
+                ><transition>
+                  <img src="@/assets/imgs/pokemons/003.png" v-if="exibir" />
+                </transition>
+              </div>
             </div>
           </div>
 
@@ -211,5 +218,19 @@ body {
 
 .detalhes {
   margin: 20px 30px 20px 30px;
+}
+
+.evolucoes {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 70px;
+}
+
+.evolucoes img {
+  cursor: pointer;
+  max-width: 100%;
+  max-height: 100%;
+  float: right;
 }
 </style>
