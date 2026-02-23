@@ -86,28 +86,33 @@ body {
 <style scoped>
 /* Entrada */
 .v-enter-from {
+  transform: translateX(-150px);
   opacity: 0;
 }
 
 .v-enter-active {
   transition: opacity 2s;
+  transition: all 1s;
 }
 
 .v-enter-to {
+  transform: translateX(0px);
   opacity: 1;
 }
 
 /* Saída */
 .v-leave-from {
   opacity: 1;
+  transform: translateX(0px);
 }
 
 .v-leave-active {
-  transition: opacity 2s;
+  transition: all 1s;
 }
 
 .v-leave-to {
   opacity: 0;
+  transform: translateX(150px);
 }
 
 .pokedex {
