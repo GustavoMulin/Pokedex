@@ -13,9 +13,10 @@
               </transition>
 
               <div class="evolucoes">
-                <transition> <img src="@/assets/imgs/pokemons/002.png" v-if="exibir" /> </transition
-                ><transition>
-                  <img src="@/assets/imgs/pokemons/003.png" v-if="exibir" />
+                <transition name="fade">
+                  <img src="@/assets/imgs/pokemons/003.png" v-if="exibir" /> </transition
+                ><transition name="fade">
+                  <img src="@/assets/imgs/pokemons/002.png" v-if="exibir" />
                 </transition>
               </div>
             </div>
@@ -91,6 +92,17 @@ body {
 </style>
 
 <style scoped>
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: opacity 1s;
+}
+
+.fade-enter-to {
+  opacity: 1;
+}
 /* Entrada */
 .v-enter-from {
   transform: translateX(-150px);
