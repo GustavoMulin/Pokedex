@@ -8,7 +8,7 @@
 
           <div class="card-body bg-pokebola bg-normal">
             <div class="pokemon">
-              <transition>
+              <transition name="zoom">
                 <img src="@/assets/imgs/pokemons/001.png" v-if="exibir" />
               </transition>
 
@@ -92,47 +92,7 @@ body {
 </style>
 
 <style scoped>
-.fade-enter-from {
-  opacity: 0;
-}
-
-.fade-enter-active {
-  transition: opacity 1s;
-}
-
-.fade-enter-to {
-  opacity: 1;
-}
-/* Entrada */
-.v-enter-from {
-  transform: translateX(-150px);
-  opacity: 0;
-}
-
-.v-enter-active {
-  transition: opacity 2s;
-  transition: all 1s;
-}
-
-.v-enter-to {
-  transform: translateX(0px);
-  opacity: 1;
-}
-
-/* Saída */
-.v-leave-from {
-  opacity: 1;
-  transform: translateX(0px);
-}
-
-.v-leave-active {
-  transition: all 1s;
-}
-
-.v-leave-to {
-  opacity: 0;
-  transform: translateX(150px);
-}
+@import "@/assets/css/animacoes.css";
 
 .pokedex {
   padding: 20px;
