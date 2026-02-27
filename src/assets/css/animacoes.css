@@ -39,7 +39,7 @@
 }
 
 /* ZOOM */
-.zoom-enter-from {
+/* .zoom-enter-from {
   transform: scale(0);
   opacity: 0;
 }
@@ -62,4 +62,97 @@
 
 .zoom-leave-to {
   transform: scale(0);
+} */
+
+/* FLIP */
+/* .flip-enter-from {
+  transform: rotateY(-80deg);
+}
+
+.flip-enter-active {
+  transition: transform 2s;
+}
+
+.flip-enter-to {
+  transform: rotateY(0deg);
+}
+
+.flip-leave-from {
+  transform: rotateY(0deg);
+}
+
+.flip-leave-active {
+  transition: transform 2s;
+}
+
+.flip-leave-to {
+  transform: rotateY(80deg);
+} */
+
+@keyframes flip {
+  from {
+    transform: rotateY(-80deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
+}
+
+.flip-enter-active {
+  animation: flipCustomizado 2s;
+}
+
+.flip-leave-active {
+  animation: flipCustomizado 2s reverse;
+}
+
+@keyframes flipCustomizado {
+  0% {
+    transform: rotateY(-80deg);
+  }
+  25% {
+    transform: rotateY(-75deg);
+  }
+  50% {
+    transform: rotateY(-25deg);
+  }
+  100% {
+    transform: rotateY(-0deg);
+  }
+}
+
+/* Animacao */
+.animacao1-enter-active,
+.animacao1-leave-active {
+  animation: animacao1 5s ease 0s infinite normal forwards;
+}
+
+@keyframes animacao1 {
+  0.0% {
+    transform: scale(1) translate(-100px, 0) skew(0deg);
+  }
+  39.9% {
+    transform: scale(1) translate(100px, 0) skew(-5deg);
+  }
+  45.3% {
+    transform: scale(1) translate(100px, -6px) skew(0deg);
+  }
+  5.1% {
+    transform: scale(1) translate(-100px, 0) skew(-12deg);
+  }
+  50.3% {
+    transform: scale(1) translate(100px, 0) skew(0deg);
+  }
+  55.3% {
+    transform: scale(1) translate(100px, 10px) skew(0deg);
+  }
+  60.3% {
+    transform: scale(1) translate(100px, 0) skew(5deg);
+  }
+  95.1% {
+    transform: scale(1) translate(-100px, 0) skew(12deg);
+  }
+  99.6% {
+    transform: scale(1) translate(-100px, 0) skew(0deg);
+  }
 }
