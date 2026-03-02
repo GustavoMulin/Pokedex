@@ -8,7 +8,7 @@
 
           <div class="card-body bg-pokebola bg-normal">
             <div class="pokemon">
-              <transition name="pulo">
+              <transition name="pulo" type="">
                 <img src="@/assets/imgs/pokemons/001.png" v-if="exibir" />
               </transition>
 
