@@ -207,3 +207,29 @@
     transform: scale(1, 1) translateY(0);
   }
 }
+
+/* Slide de cima para baixo */
+.entrada-estado-inicial {
+  opacity: 0;
+  transform: translateY(-150px);
+}
+
+.entrada-estado-final {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.saida-estado-inicial {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.saida-estado-final {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.entrada-transicao,
+.saida-transicao {
+  transition: all 2s;
+}
