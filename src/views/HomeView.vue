@@ -98,9 +98,10 @@ export default {
       console.log("antes da entrada", el);
     },
 
-    duranteAEntrada(el, done) {
+    // duranteAEntrada(el, done)
+    duranteAEntrada(el) {
       console.log("durante a entrada", el);
-      done();
+      // done();
     },
 
     aposAEntrada(el) {
@@ -115,9 +116,10 @@ export default {
       console.log("antes da saída", el);
     },
 
-    duranteASaida(el, done) {
+    // duranteASaida(el, done)
+    duranteASaida(el) {
       console.log("durante a saída", el);
-      done();
+      // done();
     },
   },
 
