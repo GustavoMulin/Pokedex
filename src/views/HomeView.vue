@@ -9,14 +9,8 @@
           <div class="card-body bg-pokebola bg-normal">
             <div class="pokemon">
               <transition
-                @before-enter="antesDaEntrada"
-                @enter="duranteAEntrada"
-                @after-enter="aposAEntrada"
-                @enter-cancelled="quandoEntradaCancelada"
-                @before-leave="antesDaSaida"
-                @leave="duranteASaida"
-                @after-leave="aposASaida"
-                @leave-cancelled="quandoSaidaCancelada"
+                @after-enter="exibirEvolucoesTransicao"
+                @before-leave="ocultarEvolucoesTransicao"
                 enter-active-class="animate__bounceIn"
                 leave-active-class="animate__bounceOut"
               >
@@ -25,9 +19,9 @@
 
               <div class="evolucoes">
                 <transition name="fade">
-                  <img src="@/assets/imgs/pokemons/003.png" v-if="exibir" /> </transition
+                  <img src="@/assets/imgs/pokemons/003.png" v-if="exibirEvolucoes" /> </transition
                 ><transition name="fade">
-                  <img src="@/assets/imgs/pokemons/002.png" v-if="exibir" />
+                  <img src="@/assets/imgs/pokemons/002.png" v-if="exibirEvolucoes" />
                 </transition>
               </div>
             </div>
@@ -92,43 +86,45 @@ export default {
   name: "HomeView",
   data: () => ({
     exibir: false,
+    exibirEvolucoes: false,
   }),
   methods: {
-    antesDaEntrada(el) {
-      console.log("antes da entrada", el);
+    exibirEvolucoesTransicao() {
+      this.exibirEvolucoes = true;
     },
 
-    // duranteAEntrada(el, done)
-    duranteAEntrada(el) {
-      console.log("durante a entrada", el);
-      // done();
+    ocultarEvolucoesTransicao() {
+      this.exibirEvolucoes = false;
     },
 
-    aposAEntrada(el) {
-      console.log("após a entrada", el);
-    },
-
-    quandoEntradaCancelada(el) {
-      console.log("quando a entrada é cancelada", el);
-    },
-
-    antesDaSaida(el) {
-      console.log("antes da saída", el);
-    },
-
-    // duranteASaida(el, done)
-    duranteASaida(el) {
-      console.log("durante a saída", el);
-      // done();
-    },
-  },
-
-  aposASaida(el) {
-    console.log("após a saída", el);
-  },
-
-  quandoSaidaCancelada(el) {
-    console.log("quando a saída é cancelada", el);
+    // antesDaEntrada(el) {
+    //   console.log("antes da entrada", el);
+    // },
+    // // duranteAEntrada(el, done)
+    // duranteAEntrada(el) {
+    //   console.log("durante a entrada", el);
+    //   // done();
+    // },
+    // aposAEntrada(el) {
+    //   console.log("após a entrada", el);
+    // },
+    // quandoEntradaCancelada(el) {
+    //   console.log("quando a entrada é cancelada", el);
+    // },
+    // antesDaSaida(el) {
+    //   console.log("antes da saída", el);
+    // },
+    // // duranteASaida(el, done)
+    // duranteASaida(el) {
+    //   console.log("durante a saída", el);
+    //   // done();
+    // },
+    // aposASaida(el) {
+    //   console.log("após a saída", el);
+    // },
+    // quandoSaidaCancelada(el) {
+    //   console.log("quando a saída é cancelada", el);
+    // },
   },
 };
 </script>
