@@ -9,6 +9,14 @@
           <div class="card-body bg-pokebola bg-normal">
             <div class="pokemon">
               <transition
+                @before-enter="antesDaEntrada"
+                @enter="duranteAEntrada"
+                @after-enter="aposAEntrada"
+                @enter-cancelled="quandoEntradaCancelada"
+                @before-leave="antesDaSaida"
+                @leave="duranteASaida"
+                @after-leave="aposASaida"
+                @leave-cancelled="quandoSaidaCancelada"
                 enter-active-class="animate__bounceIn"
                 leave-active-class="animate__bounceOut"
               >
@@ -85,6 +93,41 @@ export default {
   data: () => ({
     exibir: false,
   }),
+  methods: {
+    antesDaEntrada(el) {
+      console.log("antes da entrada", el);
+    },
+
+    duranteAEntrada(el, done) {
+      console.log("durante a entrada", el);
+      done();
+    },
+
+    aposAEntrada(el) {
+      console.log("após a entrada", el);
+    },
+
+    quandoEntradaCancelada(el) {
+      console.log("quando a entrada é cancelada", el);
+    },
+
+    antesDaSaida(el) {
+      console.log("antes da saída", el);
+    },
+
+    duranteASaida(el, done) {
+      console.log("durante a saída", el);
+      done();
+    },
+  },
+
+  aposASaida(el) {
+    console.log("após a saída", el);
+  },
+
+  quandoSaidaCancelada(el) {
+    console.log("quando a saída é cancelada", el);
+  },
 };
 </script>
 
