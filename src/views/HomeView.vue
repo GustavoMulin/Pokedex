@@ -9,22 +9,34 @@
           <div class="card-body bg-pokebola bg-normal">
             <div class="pokemon">
               <transition
+                mode="out-in"
                 @after-enter="exibirEvolucoesTransicao"
                 @before-leave="ocultarEvolucoesTransicao"
-                enter-active-class="animate__bounceIn"
-                leave-active-class="animate__bounceOut"
+                enter-active-class="animate__animated animate__bounceIn"
+                leave-active-class="animate__animated animate__bounceOut"
               >
-                <img src="@/assets/imgs/pokemons/001.png" v-if="exibir" />
+                <img
+                  v-if="pokemonSelecionado"
+                  :key="pokemonSelecionado.id"
+                  :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonSelecionado.id}.png`"
+                />
               </transition>
 
               <div class="evolucoes">
-                <transition name="fade">
-                  <img src="@/assets/imgs/pokemons/003.png" v-if="exibirEvolucoes" /> </transition
-                ><transition name="fade">
-                  <img src="@/assets/imgs/pokemons/002.png" v-if="exibirEvolucoes" />
-                </transition>
+                <transition-group name="fade">
+                  <img
+                    v-for="e in evolucoes"
+                    :key="e"
+                    v-show="exibirEvolucoes"
+                    :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${e}.png`"
+                  />
+                </transition-group>
               </div>
             </div>
+          </div>
+
+          <div class="detalhes">
+            <PokemonStats v-if="pokemonSelecionado" :stats="stats" />
           </div>
 
           <div class="card-footer">
@@ -50,26 +62,38 @@
 
         <div class="row">
           <div class="col">
-            <select class="form-select">
-              <option>Id crescente</option>
-              <option>Id decrescrente</option>
-              <option>De A - Z</option>
+            <select class="form-select" v-model="ordenacao">
+              <option value="id-crescente">Id crescente</option>
+              <option value="id-decrescente">Id decrescente</option>
+              <option value="az">De A - Z</option>
             </select>
           </div>
 
           <div class="col">
-            <input type="text" class="form-control" placeholder="Pesquisar pokémon" />
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Pesquisar pokémon"
+              v-model="busca"
+            />
           </div>
         </div>
 
         <div class="row">
           <div class="pokedex-catalogo">
             <!-- início listagem dinâmica -->
-            <div class="cartao-pokemon bg-grama" @click="exibir = !exibir">
-              <h1>1 Bulbasaur</h1>
-              <span>grama</span>
+            <div
+              v-for="p in pokemonsFiltrados"
+              :key="p.id"
+              :class="`cartao-pokemon bg-${p.tipo}`"
+              @click="selecionarPokemon(p)"
+            >
+              <h1>{{ p.id }} {{ p.nome }}</h1>
+              <span>{{ p.tipo }}</span>
               <div class="cartao-pokemon-img">
-                <img src="@/assets/imgs/pokemons/001.png" />
+                <img
+                  :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.id}.png`"
+                />
               </div>
             </div>
             <!-- fim listagem dinâmica -->
@@ -82,12 +106,54 @@
 </template>
 
 <script>
+import PokemonStats from "@/components/pokemonStats.vue";
 export default {
   name: "HomeView",
-  data: () => ({
-    exibir: false,
-    exibirEvolucoes: false,
-  }),
+
+  components: {
+    PokemonStats,
+  },
+
+  data() {
+    return {
+      exibir: false,
+      exibirEvolucoes: false,
+      pokemons: [],
+      pokemonSelecionado: null,
+      evolucoes: [],
+      busca: "",
+      ordenacao: "id-crescente",
+    };
+  },
+
+  computed: {
+    pokemonsFiltrados() {
+      let lista = [...this.pokemons];
+
+      if (this.busca) {
+        lista = lista.filter((p) => p.nome.toLowerCase().includes(this.busca.toLowerCase()));
+      }
+
+      if (this.ordenacao === "id-crescente") {
+        lista.sort((a, b) => a.id - b.id);
+      }
+
+      if (this.ordenacao === "id-decrescente") {
+        lista.sort((a, b) => b.id - a.id);
+      }
+
+      if (this.ordenacao === "az") {
+        lista.sort((a, b) => a.nome.localeCompare(b.nome));
+      }
+
+      return lista;
+    },
+  },
+
+  mounted() {
+    this.carregarPokemons();
+  },
+
   methods: {
     exibirEvolucoesTransicao() {
       this.exibirEvolucoes = true;
@@ -97,34 +163,92 @@ export default {
       this.exibirEvolucoes = false;
     },
 
-    // antesDaEntrada(el) {
-    //   console.log("antes da entrada", el);
-    // },
-    // // duranteAEntrada(el, done)
-    // duranteAEntrada(el) {
-    //   console.log("durante a entrada", el);
-    //   // done();
-    // },
-    // aposAEntrada(el) {
-    //   console.log("após a entrada", el);
-    // },
-    // quandoEntradaCancelada(el) {
-    //   console.log("quando a entrada é cancelada", el);
-    // },
-    // antesDaSaida(el) {
-    //   console.log("antes da saída", el);
-    // },
-    // // duranteASaida(el, done)
-    // duranteASaida(el) {
-    //   console.log("durante a saída", el);
-    //   // done();
-    // },
-    // aposASaida(el) {
-    //   console.log("após a saída", el);
-    // },
-    // quandoSaidaCancelada(el) {
-    //   console.log("quando a saída é cancelada", el);
-    // },
+    async selecionarPokemon(p) {
+      const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${p.id}`);
+      const dados = await resp.json();
+
+      this.pokemonSelecionado = p;
+
+      this.stats = dados.stats;
+
+      this.exibir = true;
+
+      await this.carregarEvolucoes(p.id);
+    },
+
+    async carregarPokemons() {
+      const resposta = await fetch("https://pokeapi.co/api/v2/pokemon?limit=806");
+
+      const dados = await resposta.json();
+
+      const lista = await Promise.all(
+        dados.results.map(async (p) => {
+          const respPokemon = await fetch(p.url);
+          const dadosPokemon = await respPokemon.json();
+
+          let tipoApi = dadosPokemon.types[0].type.name;
+
+          const tipos = {
+            grass: "grama",
+            fire: "fogo",
+            water: "agua",
+            bug: "inseto",
+            normal: "normal",
+            electric: "eletrico",
+            poison: "veneno",
+            ground: "terra",
+            rock: "pedra",
+            psychic: "psiquico",
+            fighting: "lutador",
+            ghost: "fantasma",
+            ice: "gelo",
+            dragon: "dragao",
+            dark: "sombrio",
+            steel: "aco",
+            fairy: "fada",
+            flying: "voador",
+          };
+
+          let tipo = tipos[tipoApi] || "normal";
+
+          return {
+            id: dadosPokemon.id,
+            nome: dadosPokemon.name,
+            tipo: tipo,
+          };
+        }),
+      );
+
+      this.pokemons = lista;
+    },
+
+    async carregarEvolucoes(id) {
+      this.evolucoes = [];
+
+      const respSpecies = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+
+      const species = await respSpecies.json();
+
+      const respEvo = await fetch(species.evolution_chain.url);
+
+      const evoData = await respEvo.json();
+
+      let cadeia = evoData.chain;
+
+      let lista = [];
+
+      lista.push(cadeia.species.url.split("/")[6]);
+
+      if (cadeia.evolves_to[0]) {
+        lista.push(cadeia.evolves_to[0].species.url.split("/")[6]);
+
+        if (cadeia.evolves_to[0].evolves_to[0]) {
+          lista.push(cadeia.evolves_to[0].evolves_to[0].species.url.split("/")[6]);
+        }
+      }
+
+      this.evolucoes = lista.filter((e) => e != id);
+    },
   },
 };
 </script>
@@ -207,6 +331,58 @@ body {
   background-color: #26d3ab;
 }
 
+.bg-eletrico {
+  background-color: #f7d02c;
+}
+
+.bg-veneno {
+  background-color: #a33ea1;
+}
+
+.bg-terra {
+  background-color: #e2bf65;
+}
+
+.bg-pedra {
+  background-color: #b6a136;
+}
+
+.bg-psiquico {
+  background-color: #f95587;
+}
+
+.bg-lutador {
+  background-color: #c22e28;
+}
+
+.bg-fantasma {
+  background-color: #735797;
+}
+
+.bg-gelo {
+  background-color: #96d9d6;
+}
+
+.bg-dragao {
+  background-color: #6f35fc;
+}
+
+.bg-sombrio {
+  background-color: #705746;
+}
+
+.bg-aco {
+  background-color: #b7b7ce;
+}
+
+.bg-fada {
+  background-color: #d685ad;
+}
+
+.bg-voador {
+  background-color: #a98ff3;
+}
+
 .bg-normal {
   background-color: #cecece;
 }
@@ -232,6 +408,11 @@ body {
   height: 215px;
 }
 
+.pokemon img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 .detalhes {
   margin: 20px 30px 20px 30px;
 }
@@ -242,7 +423,6 @@ body {
   right: 0px;
   height: 70px;
 }
-
 .evolucoes img {
   cursor: pointer;
   max-width: 100%;
